@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class EmailFragment : Fragment() {
 
@@ -38,6 +39,8 @@ class EmailFragment : Fragment() {
         val longitude = (requireActivity() as MainActivity).longitude
         val address = (requireActivity() as MainActivity).address
 
+        sf = requireActivity().getSharedPreferences("project2_sef", AppCompatActivity.MODE_PRIVATE)
+
         val btn = view.findViewById<TextView>(R.id.sendEmailButton);
 
         btn.setOnClickListener {
@@ -53,5 +56,25 @@ class EmailFragment : Fragment() {
 
             startActivity(Intent.createChooser(intent, "Choose a Email Client..."));
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val email = emailTextField.text.toString()
+
+        val editor= sf.edit()
+        editor.apply {
+            putString("sf_email",email)
+            commit()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val email = sf.getString("sf_email",null)
+
+        emailTextField.setText(email)
     }
 }
