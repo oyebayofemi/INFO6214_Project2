@@ -3,4 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="google_map_api_key">AIzaSyD2BbVNIUqqwt7vO7Abgt99Nry8Mzu7Y4E</string>
+    <string name="developers">Developers</string>
+    <string name="about_text">The application gets the users location and the list of places around the location. And the app also shares the user location using email.</string>
+    <string name="my_name">Oluwafemi Oyebayo</string>
 </resources>
