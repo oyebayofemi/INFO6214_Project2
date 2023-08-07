@@ -3,6 +3,8 @@ package com.example.oluwafemioyebayoinfo6214project2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -37,8 +39,9 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse
 import com.google.android.libraries.places.api.net.PlacesClient
+import java.io.IOException
 import java.util.Arrays
-
+import java.util.Locale
 
 class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -142,7 +145,15 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
             if (location == null) {
                 newLocation()
             } else {
-                Log.i("Debug:", "Your Location:" + location?.longitude)
+//                Log.i("Debug:", "Your Location:" + location?.longitude)
+
+                val locationLatLng = LatLng(location.latitude,location.longitude)
+
+                var address = getAddress(locationLatLng)
+
+                (requireActivity() as MainActivity).longitude = location?.longitude.toString()
+                (requireActivity() as MainActivity).latitude = location?.latitude.toString()
+                (requireActivity() as MainActivity).address = address!!
 
                 val currentLatLng = LatLng(location!!.latitude, location!!.longitude)
 
@@ -184,6 +195,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
         override fun onLocationResult(locationResult: LocationResult) {
             var lastLocation: Location? = locationResult.lastLocation
             if (lastLocation != null) {
+//                lastLocation.
 
 
                 Log.i("Debug:","your last last location: "+ lastLocation.longitude.toString())
@@ -201,6 +213,37 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
 
             }
 //            textView.text = "You Last Location is : Long: "+ lastLocation.longitude + " , Lat: " + lastLocation.latitude + "\n" + getCityName(lastLocation.latitude,lastLocation.longitude)
+        }
+    }
+
+    private fun getAddress(loc:LatLng): String? {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        var addresses: List<Address>? = null
+        try {
+            addresses = geocoder.getFromLocation(loc!!.latitude, loc!!.longitude, 1)
+        } catch (e1: IOException) {
+            Log.e("Geocoding", "Problem with the geolocation service", e1)
+        } catch (e2: IllegalArgumentException) {
+            Log.e("Geocoding", "Invalid LatLng"+
+                    "Latitude = " + loc!!.latitude +
+                    ", Longitude = " +
+                    loc!!.longitude, e2)
+        }
+        // If the reverse geocode returned an address
+        if (addresses != null) {
+            // Get the first address
+            val address = addresses[0]
+            val addressText = String.format(
+                "%s, %s, %s",
+                address.getAddressLine(0), // If there's a street address, add it
+                address.locality,                 // Locality is usually a city
+                address.countryName)              // The country of the address
+            return addressText
+        }
+        else
+        {
+            Log.e("Geocoding", "No address found")
+            return ""
         }
     }
 
@@ -269,10 +312,8 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                         }
                     }
 
-                    // Print results to logcat
-//                    println(mLikelyPlaceNames)
-
                     (requireActivity() as MainActivity).theList = listOfPlaces
+
                 } else {
                     val exception: Exception? = task.getException()
                     if (exception is ApiException) {

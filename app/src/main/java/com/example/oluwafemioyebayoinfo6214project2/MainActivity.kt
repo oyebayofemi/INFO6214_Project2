@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var theList: MutableList<PlacesObject>
 
+    lateinit var latitude: String
+    lateinit var longitude: String
+    lateinit var address: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
