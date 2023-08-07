@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyRecyclerViewAdapter(val listofPlaces: List<Places>): RecyclerView.Adapter<MyViewHolder>() {
+class MyRecyclerViewAdapter(val listofPlaces: List<PlacesObject>): RecyclerView.Adapter<MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val listItem = layoutInflater.inflate(R.layout.list_item,parent,false)
@@ -25,7 +25,7 @@ class MyRecyclerViewAdapter(val listofPlaces: List<Places>): RecyclerView.Adapte
 
 }
 class MyViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-    fun bid(place: Places){
+    fun bid(place: PlacesObject){
         val textView = view.findViewById<TextView>(R.id.tvName)
 
         textView.text = place.name

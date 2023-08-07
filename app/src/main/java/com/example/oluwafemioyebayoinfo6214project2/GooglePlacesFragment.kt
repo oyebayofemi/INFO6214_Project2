@@ -27,12 +27,7 @@ class GooglePlacesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val ListOfPlaces = listOf<Places>(
-            Places("London"),
-            Places("America"),
-            Places("Chee"),
-
-            )
+        val ListOfPlaces = (requireActivity() as MainActivity).theList
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.myRecyclerView)
 

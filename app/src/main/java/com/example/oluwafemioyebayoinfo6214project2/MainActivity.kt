@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     val emailFragment = EmailFragment()
     val aboutFragment = AboutFragment()
 
+    lateinit var theList: MutableList<PlacesObject>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
