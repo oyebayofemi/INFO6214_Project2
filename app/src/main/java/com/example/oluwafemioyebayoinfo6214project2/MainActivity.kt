@@ -21,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
         supportFragmentManager.beginTransaction().apply {
             add(R.id.fragmentContainer, googleMapsFragment);
             commit();
