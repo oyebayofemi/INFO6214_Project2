@@ -66,7 +66,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
         val view = inflater.inflate(R.layout.fragment_google_maps, container, false)
 
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment;
-
         mapFragment?.getMapAsync(this)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -78,22 +77,11 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         val apiKey = getString(R.string.google_map_api_key)
-        //Did some change here
         Places.initialize(requireContext(), apiKey)
         mPlacesClient = Places.createClient(requireContext())
         mLikelyPlaceNames = arrayOf<String>("","","","","","","","","","")
         mLikelyPlaceAddresses = ArrayList<String>()
         mLikelyPlaceLatLngs = ArrayList<LatLng>()
-//        listOfPlaces = ArrayList<Places>()
-
-        val btn = view.findViewById<ImageButton>(R.id.getLocation);
-
-        btn.setOnClickListener {
-
-            requestLocation()
-            getCurrentPlaceLikelihoods()
-        }
-
     }
 
     override fun onRequestPermissionsResult(
@@ -145,8 +133,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
             if (location == null) {
                 newLocation()
             } else {
-//                Log.i("Debug:", "Your Location:" + location?.longitude)
-
                 val locationLatLng = LatLng(location.latitude,location.longitude)
 
                 var address = getAddress(locationLatLng)
@@ -229,15 +215,15 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                     ", Longitude = " +
                     loc!!.longitude, e2)
         }
-        // If the reverse geocode returned an address
+
         if (addresses != null) {
             // Get the first address
             val address = addresses[0]
             val addressText = String.format(
                 "%s, %s, %s",
-                address.getAddressLine(0), // If there's a street address, add it
-                address.locality,                 // Locality is usually a city
-                address.countryName)              // The country of the address
+                address.getAddressLine(0),
+                address.locality,
+                address.countryName)
             return addressText
         }
         else
@@ -249,15 +235,12 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getCurrentPlaceLikelihoods() {
-        // Use fields to define the data types to return.
+
         val placeFields = Arrays.asList(
             Place.Field.NAME, Place.Field.ADDRESS,
             Place.Field.LAT_LNG
         )
-//        var placesList: MutableList<Places> = mutableListOf()
 
-        // Get the likely places - that is, the businesses and other points of interest that
-        // are the best match for the device's current location.
         val request = FindCurrentPlaceRequest.builder(placeFields).build()
         val placeResponse: Task<FindCurrentPlaceResponse> =
             mPlacesClient!!.findCurrentPlace(request)
@@ -266,7 +249,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
             OnCompleteListener<FindCurrentPlaceResponse?> { task ->
                 if (task.isSuccessful) {
                     val response = task.result
-                    // Set the count, handling cases where less than 5 entries are returned.
+
                     val count: Int
 
                     if (response.placeLikelihoods.size < M_MAX_ENTRIES) {
@@ -284,19 +267,8 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                         mLikelyPlaceLatLngs.add(currPlace.latLng)
                         listOfPlaces.add(PlacesObject(currPlace.name))
 
-//                        val namePlace = currPlace.name
-//
-//                        placesList.add(Places("namePlace.toString()"))
-
-                        Toast.makeText(requireContext(), currPlace.name, Toast.LENGTH_LONG).show()
-
-                        mGoogleMap.addMarker(
-                                MarkerOptions().position(currPlace.latLng).title(currPlace.name).snippet("This is the address ")
-                            )
-
                         val currLatLng =
                             if (mLikelyPlaceLatLngs[i] == null) "" else mLikelyPlaceLatLngs[i].toString()
-
 
                         Log.i(
                             "Places", String.format(
@@ -305,7 +277,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                                         + " at " + currLatLng
                             )
                         )
-//                        Toast.makeText(requireContext(), "Data Obtained", Toast.LENGTH_LONG).show()
                         i++
                         if (i > (count - 1)) {
                             break
