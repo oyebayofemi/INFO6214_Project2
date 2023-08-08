@@ -44,7 +44,7 @@ import java.util.Arrays
 import java.util.Locale
 
 class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
-
+//    Fanshawe  43.012440, -81.200180
     private lateinit var mGoogleMap: GoogleMap
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val PERMISSION_ID = 100
@@ -144,8 +144,8 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                 val currentLatLng = LatLng(location!!.latitude, location!!.longitude)
 
                 mGoogleMap.addMarker(
-                    MarkerOptions().position(currentLatLng).title("Current Location")
-                        .snippet("This is the address ")
+                    MarkerOptions().position(currentLatLng).title("${location?.latitude.toString()}, ${location?.longitude.toString()}")
+                        .snippet(address)
                 )
                 mGoogleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f)
@@ -181,14 +181,14 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
         override fun onLocationResult(locationResult: LocationResult) {
             var lastLocation: Location? = locationResult.lastLocation
             if (lastLocation != null) {
-//                lastLocation.
 
-
-                Log.i("Debug:","your last last location: "+ lastLocation.longitude.toString())
                 val currentLatLng = LatLng(lastLocation!!.latitude, lastLocation!!.longitude)
+                var address = getAddress(currentLatLng)
+
 
                 mGoogleMap.addMarker(
-                    MarkerOptions().position(currentLatLng).title("Current Location").snippet("This is the address ")
+                    MarkerOptions().position(currentLatLng).title("${lastLocation.latitude.toString()}, ${lastLocation.longitude.toString()}")
+                        .snippet(address)
                 )
                 mGoogleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f)
@@ -198,7 +198,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback {
                 Log.i("Debug:","Its null")
 
             }
-//            textView.text = "You Last Location is : Long: "+ lastLocation.longitude + " , Lat: " + lastLocation.latitude + "\n" + getCityName(lastLocation.latitude,lastLocation.longitude)
         }
     }
 
