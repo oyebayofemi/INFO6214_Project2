@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.google_places_option -> changeFragment(googlePlacesFragment)
                 R.id.email_option -> changeFragment(emailFragment)
                 R.id.about_option -> changeFragment(aboutFragment)
-
             }
             true
         }
@@ -51,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         menuBtn.setOnClickListener {
             menuOptions.show()
         }
-
     }
 
     private fun changeFragment(frgamentName: Fragment){
